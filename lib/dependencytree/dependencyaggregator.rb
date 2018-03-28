@@ -50,7 +50,7 @@ module Dependencytree
       module_model = ClassModel.new(:module, @path, current_module_name)
       @context_stack <<= module_model
       if @context_stack.length > 0
-        current_class.set_parent(@context_stack[-1])
+        module_model.set_parent(@context_stack[-1])
       end
       @classes <<= module_model 
       # recurse over the contents of the module
