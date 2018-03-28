@@ -5,9 +5,11 @@ require "dependencytree/classmodel"
 module Dependencytree
   class DependencyAggregator
     def initialize()
+      # path will be the file system path of the source file
       @path = nil
-      @current_module_name = :anonymous
-      @current_class_name = :anonymous
+      # context_stack is the stack of modules/classes loaded (namespacing)
+      @context_stack = []
+      # this is a flat list of all classes / modules seen
       @classes = []
     end
 
@@ -33,11 +35,9 @@ module Dependencytree
       raise ArgumentError, "type needs to be const (#{node.type})" if node.type != :const
       raise ArgumentError, "Children count needs to be 2 (#{node.children.length})" if node.children.length != 2
 
-      if @current_class
-        reference = flatten_const_tree(node)
-        @current_class.add_reference(reference)
-        puts "added #{reference}"
-      end
+      reference = flatten_const_tree(node)
+      @context_stack[-1].add_reference(reference)
+      puts "added #{reference}"
     end
 
     def _module(node)
@@ -46,11 +46,13 @@ module Dependencytree
 
       puts "module #{node.children[0].children[1]}"
 
-      old_module = @current_class
-      @current_module_name = node.children[0].children[1]
+      current_module_name = node.children[0].children[1]
+      module_model = ClassModel.new(:module, @path, current_module_name)
+      @context_stack <<= module_model
+      @classes <<= module_model 
       # recurse over the contents of the module
       visit_children(node.children[1..node.children.length])
-      @current_module_name = old_module
+      @context_stack.pop
     end
 
     def _def(node)
@@ -59,7 +61,7 @@ module Dependencytree
       puts "def #{node.children[0]}"
 
       # depending on whether in module or class be clever here ;)
-      @current_class.add_method(node.children[0])
+      @context_stack[-1].add_method(node.children[0])
 
       visit_children(node.children[1..node.children.length])
     end
@@ -73,15 +75,14 @@ module Dependencytree
       old_class_name = @current_class_name
       old_class = @current_class
 
-      @current_class_name = node.children[0].children[1]
-      @current_class = ClassModel.new(@path, @current_module_name, @current_class_name)
-      @classes <<= @current_class
+      current_class_name = node.children[0].children[1]
+      current_class = ClassModel.new(:class, @path, current_class_name)
+      @classes <<= current_class
+      @context_stack <<= current_class
 
-      @references[@current_class_name] = []
       # recurse over the contents of the class
       visit_children(node.children[1..node.children.length])
-      @current_class_name = old_class_name
-      @current_class = old_class
+      @context_stack.pop
     end
 
     def visit_node(node)
