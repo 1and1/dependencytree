@@ -10,7 +10,6 @@ require 'json'
 module Dependencytree
 
   def self.handle_path(options, consumer, path)
-puts path
     if options[:ignore].match(path)
       return
     end
@@ -28,7 +27,7 @@ puts path
 
   options = {}
   options[:ignore] = Regexp.new("^$")
-  options[:pattern] = Regexp.new(".*\.rb")
+  options[:pattern] = Regexp.new(".*\\.rb")
   OptionParser.new do |opt|
     opt.on("-v", "--verbose", "Verbose output") { |o| options[:verbose] = true }
     opt.on("-p", "--pattern", "Pattern to accept source codes with (.*\.rb)") { |o| options[:pattern] = Regexp.new(o) }
