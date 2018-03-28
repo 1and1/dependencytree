@@ -2,22 +2,27 @@ require "dependencytree/version"
 
 module Dependencytree
   class ClassModel
+    # type: :class or :module
     # path: the filesystem path the parsed class was found in
     # module_name: eventual module name or :anonymous
     # class_name: the class name
-    def initialize(path, module_name, class_name)
+    def initialize(type, path, name)
+      @type = type
       @path = path
-      @module_name = module_name
-      @class_name = class_name
+      @name = name
       @method_names = []
       @references = []
     end
 
+    def set_parent(parent)
+      @parent = parent
+    end
+
     def as_json(*a)
       {
+        "type" => @type,
         "path" => @path,
-        "module" => @module_name,
-        "class" => @class_name,
+        "name" => @name,
         "methods" => @method_names,
         "refs" => @references.uniq
       }
