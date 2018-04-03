@@ -19,7 +19,17 @@ module Dependencytree
       @references = []
     end
 
+    def get_full_name()
+      if @parent
+        result = @parent.get_full_name() + "::" + @name
+      else
+        result = @name
+      end
+      result
+    end
+
     def set_parent(parent)
+      raise ArgumentError, "Self parent reference for name #{@name}" if parent == self
       @parent = parent
     end
 
@@ -29,6 +39,7 @@ module Dependencytree
         "type" => @type,
         "path" => @path,
         "name" => @name,
+        "full_name" => get_full_name(),
         "methods" => @method_names,
         "refs" => @references.uniq
       }
