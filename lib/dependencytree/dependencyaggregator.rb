@@ -149,11 +149,11 @@ module Dependencytree
     # @param children the array of children to visit.
     def visit_children(children)
       return if ! children
-      children.each { |child|
+      children.each do |child|
         if child.respond_to?(:children)
           visit_node(child)
         end
-      }
+      end
     end
 
     # Visits all children of the AST tree.
