@@ -21,7 +21,7 @@ module Dependencytree
 
     def get_full_name()
       if @parent
-        result = @parent.get_full_name() + "::" + @name
+        result = @parent.get_full_name().to_s + "::" + @name.to_s
       else
         result = @name
       end
