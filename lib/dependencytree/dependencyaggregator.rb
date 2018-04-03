@@ -13,6 +13,16 @@ module Dependencytree
       @classes = []
 
       @debug = false
+      _handle_class_module_common(:module, "Kernel", nil)
+      @kernel = _resolve("Kernel")
+    end
+
+    def top_of_stack
+      if @context_stack.empty?
+        @kernel
+      else
+        @context_stack[-1]
+      end
     end
 
     def to_json
@@ -48,7 +58,7 @@ module Dependencytree
       raise ArgumentError, "Children count needs to be 2 (#{node.children.length})" if node.children.length != 2
 
       reference = flatten_const_tree(node)
-      @context_stack[-1].add_reference(reference)
+      top_of_stack().add_reference(reference)
       puts "added #{reference}" if @debug
     end
 
@@ -78,7 +88,7 @@ module Dependencytree
     # Handle the common parts of a module or class definition. Will try to resolve the instance or create it if not found.
     # @param type :module or :class.
     # @param name the local class name.
-    # @param node the AST node of the class or module.
+    # @param node the AST node of the class or module, can be nil if no children traversal required.
     def _handle_class_module_common(type, name, node)
       if @parent
         resolved = _resolve(@parent.get_full_name()+"::"+name)
@@ -93,13 +103,13 @@ module Dependencytree
         model = ClassModel.new(type, @path, name)
         @classes <<= model 
       end
-      if @context_stack.length > 0
+      if ! @context_stack.empty?
         model.set_parent(@context_stack[-1])
       end
 
       @context_stack <<= model
       # recurse over the contents of the module
-      visit_children(node.children[1..node.children.length])
+      visit_children(node.children[1..node.children.length]) if node
       @context_stack.pop
     end
 
@@ -111,7 +121,7 @@ module Dependencytree
       puts "def #{node.children[0]}" if @debug
 
       # depending on whether in module or class be clever here ;)
-      @context_stack[-1].add_method(node.children[0])
+      top_of_stack().add_method(node.children[0])
 
       visit_children(node.children[1..node.children.length])
     end
@@ -147,10 +157,15 @@ module Dependencytree
     # @param path the filesystem path of the parsed entity (ruby file).
     # @param tree the AST tree node.
     def visit(path, tree)
-      pp tree if @debug
-      @path = path
-      visit_node tree
-      @path = nil
+      begin
+        pp tree if @debug
+        @path = path
+        visit_node tree
+        @path = nil
+      rescue Exception => e
+        puts "Error in path #{path}"
+        raise e
+      end
     end
   end
 end
