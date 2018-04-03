@@ -27,6 +27,8 @@ module Dependencytree
       @references = []
     end
 
+    # Gets the full name of the class/module.
+    # @return the full name, for example ModuleA::ModuleB::ClassA
     def get_full_name()
       if @parent
         result = @parent.get_full_name().to_s + "::" + @name.to_s
