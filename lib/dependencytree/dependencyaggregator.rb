@@ -67,19 +67,6 @@ module Dependencytree
       @context_stack.pop
     end
 
-    # Handle a def expression.
-    # @param node the def node itself to handle.
-    def _def(node)
-      raise ArgumentError, "Children count for def is != 3 (#{node.children.length})" if node.children.length != 3
-
-      puts "def #{node.children[0]}" if @debug
-
-      # depending on whether in module or class be clever here ;)
-      @context_stack[-1].add_method(node.children[0])
-
-      visit_children(node.children[1..node.children.length])
-    end
-
     # Handle a class expression.
     # @param node the class node itself to handle.
     def _class(node)    
@@ -103,6 +90,19 @@ module Dependencytree
       # recurse over the contents of the class
       visit_children(node.children[1..node.children.length])
       @context_stack.pop
+    end
+
+    # Handle a def expression.
+    # @param node the def node itself to handle.
+    def _def(node)
+      raise ArgumentError, "Children count for def is != 3 (#{node.children.length})" if node.children.length != 3
+
+      puts "def #{node.children[0]}" if @debug
+
+      # depending on whether in module or class be clever here ;)
+      @context_stack[-1].add_method(node.children[0])
+
+      visit_children(node.children[1..node.children.length])
     end
 
     # Visit a AST node and do the appropriate actions.
