@@ -145,7 +145,7 @@ module Dependencytree
       end
     end
 
-    # Visit all children of a node. Will call #visit_note on each node child.
+    # Visit all children of a node. Will call #visit_node on each node child.
     # @param children the array of children to visit.
     def visit_children(children)
       return if ! children
