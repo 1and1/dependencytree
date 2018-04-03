@@ -30,8 +30,12 @@ module Dependencytree
   options[:pattern] = Regexp.new(".*\\.rb")
   OptionParser.new do |opt|
     opt.on("-v", "--verbose", "Verbose output") { |o| options[:verbose] = true }
-    opt.on("-p", "--pattern", "Pattern to accept source codes with (default: #{options[:pattern].to_s})") { |o| options[:pattern] = Regexp.new(o) }
-    opt.on("-i", "--ignore", "Paths to not load (default: #{options[:ignore].to_s})") { |o| options[:ignore] = Regexp.new(o) }
+    opt.on("-p", "--pattern[=OPTIONAL]", "Pattern to accept source codes with (default: #{options[:pattern].to_s})") do |o|
+      options[:pattern] = Regexp.new(o)
+    end
+    opt.on("-i", "--ignore[=OPTIONAL]", "Paths to not load (default: #{options[:ignore].to_s})") do |o|
+      options[:ignore] = Regexp.new(o)
+    end
     opt.on_tail("-h", "--help", "Show this message") do
       puts opt
       exit
@@ -41,7 +45,6 @@ module Dependencytree
   consumer = DependencyAggregator.new()
   ARGV.each { |path|
     puts "Path #{path}" if options[:verbose]
-
     handle_path(options, consumer, File.absolute_path(path))
   }
   puts consumer.to_json
