@@ -1,12 +1,17 @@
 require "dependencytree/version"
+require "securerandom"
 
 module Dependencytree
   class ClassModel
+
+    attr_reader :uuid
+
     # type: :class or :module
     # path: the filesystem path the parsed class was found in
     # module_name: eventual module name or :anonymous
     # class_name: the class name
     def initialize(type, path, name)
+      @uuid = SecureRandom.uuid
       @type = type
       @path = path
       @name = name
@@ -19,13 +24,19 @@ module Dependencytree
     end
 
     def as_json(*a)
-      {
+      result = {
+        "uuid" => @uuid,
         "type" => @type,
         "path" => @path,
         "name" => @name,
         "methods" => @method_names,
         "refs" => @references.uniq
       }
+
+      if @parent
+        result["parent_uuid"] = @parent.uuid
+      end
+      result
     end
 
     def to_json(*a)

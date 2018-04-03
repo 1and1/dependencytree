@@ -42,7 +42,7 @@ module Dependencytree
   ARGV.each { |path|
     puts "Path #{path}" if options[:verbose]
 
-    handle_path(options, consumer, path)
+    handle_path(options, consumer, File.absolute_path(path))
   }
   puts consumer.to_json
 
