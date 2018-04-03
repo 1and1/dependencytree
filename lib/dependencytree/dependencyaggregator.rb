@@ -32,6 +32,12 @@ module Dependencytree
       result
     end
 
+    # Finds a class or module by its full name.
+    # @param full_name the full name.
+    def _resolve(full_name)
+      @classes.find  { |clazz| clazz.get_full_name() == full_name }
+    end
+
     # Handle a const expression.
     # @param node the const node itself to handle.
     def _const(node)
@@ -69,16 +75,28 @@ module Dependencytree
       _handle_class_module_common(:class, current_class_name, node)
     end
 
-    # Handle a def expression.
+    # Handle the common parts of a module or class definition. Will try to resolve the instance or create it if not found.
     # @param type :module or :class.
     # @param name the local class name.
     # @param node the AST node of the class or module.
     def _handle_class_module_common(type, name, node)
-      model = ClassModel.new(type, @path, name)
+      if @parent
+        resolved = _resolve(@parent.get_full_name()+"::"+name)
+      else
+        resolved = _resolve(name)
+      end
+      if ! resolved.nil?
+        # found an existing module/class with the full_name
+        model = resolved
+      else
+        # found no existing module/class with the full_name
+        model = ClassModel.new(type, @path, name)
+        @classes <<= model 
+      end
       if @context_stack.length > 0
         model.set_parent(@context_stack[-1])
       end
-      @classes <<= model 
+
       @context_stack <<= model
       # recurse over the contents of the module
       visit_children(node.children[1..node.children.length])
