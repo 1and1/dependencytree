@@ -55,6 +55,7 @@ module Dependencytree
       puts "module #{node.children[0].children[1]}" if @debug
 
       current_module_name = node.children[0].children[1]
+      # TODO create module or resolve existing
       module_model = ClassModel.new(:module, @path, current_module_name)
       @context_stack <<= module_model
       if @context_stack.length > 0
@@ -91,6 +92,7 @@ module Dependencytree
       old_class = @current_class
 
       current_class_name = node.children[0].children[1]
+      # TODO create class or resolve existing
       current_class = ClassModel.new(:class, @path, current_class_name)
       @classes <<= current_class
       if @context_stack.length > 0
