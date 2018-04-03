@@ -13,10 +13,12 @@ module Dependencytree
       @classes = []
 
       @debug = false
+      # force adding the Kernel module to the list of classes
       _handle_class_module_common(:module, "Kernel", nil)
       @kernel = _resolve("Kernel")
     end
 
+    # Gets the top of stack class/module or Kernel if nothing set.
     def top_of_stack
       if @context_stack.empty?
         @kernel
@@ -25,6 +27,7 @@ module Dependencytree
       end
     end
 
+    # Convert the inner data to a json (TODO: should be put into a different structure)
     def to_json
       @classes.to_json
     end
