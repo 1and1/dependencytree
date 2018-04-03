@@ -55,16 +55,7 @@ module Dependencytree
       puts "module #{node.children[0].children[1]}" if @debug
 
       current_module_name = node.children[0].children[1]
-      # TODO create module or resolve existing
-      module_model = ClassModel.new(:module, @path, current_module_name)
-      if @context_stack.length > 0
-        module_model.set_parent(@context_stack[-1])
-      end
-      @classes <<= module_model 
-      @context_stack <<= module_model
-      # recurse over the contents of the module
-      visit_children(node.children[1..node.children.length])
-      @context_stack.pop
+      _handle_class_module_common(:module, current_module_name, node)
     end
 
     # Handle a class expression.
@@ -72,22 +63,24 @@ module Dependencytree
     def _class(node)    
       raise ArgumentError, "Children count for class is != 3 (#{node.children.length})" if node.children.length != 3
       raise ArgumentError, "First class child needs to be a const (#{node.children[0].type} #{node.children[0].type})" if node.children[0].type != :const
-
       puts "clazz #{node.children[0].children[1]}" if @debug
 
-      old_class_name = @current_class_name
-      old_class = @current_class
-
       current_class_name = node.children[0].children[1]
-      # TODO create class or resolve existing
-      current_class = ClassModel.new(:class, @path, current_class_name)
-      if @context_stack.length > 0
-        current_class.set_parent(@context_stack[-1])
-      end
-      @classes <<= current_class
-      @context_stack <<= current_class
+      _handle_class_module_common(:class, current_class_name, node)
+    end
 
-      # recurse over the contents of the class
+    # Handle a def expression.
+    # @param type :module or :class.
+    # @param name the local class name.
+    # @param node the AST node of the class or module.
+    def _handle_class_module_common(type, name, node)
+      model = ClassModel.new(type, @path, name)
+      if @context_stack.length > 0
+        model.set_parent(@context_stack[-1])
+      end
+      @classes <<= model 
+      @context_stack <<= model
+      # recurse over the contents of the module
       visit_children(node.children[1..node.children.length])
       @context_stack.pop
     end
