@@ -10,7 +10,7 @@ module Dependencytree
       # context_stack is the stack of modules/classes loaded (namespacing)
       @context_stack = []
       # this is a flat list of all classes / modules seen
-      @classes = []
+      @classes_and_modules = []
 
       @debug = false
       # force adding the Kernel module to the list of classes
@@ -29,7 +29,7 @@ module Dependencytree
 
     # Convert the inner data to a json (TODO: should be put into a different structure)
     def to_json
-      @classes.to_json
+      @classes_and_modules.to_json
     end
 
     # Make an array of strings out of a encapsulated tree of :const expressions.
@@ -48,7 +48,7 @@ module Dependencytree
     # Finds a class or module by its full name.
     # @param full_name the full name.
     def _resolve(full_name)
-      @classes.find  { |clazz| clazz.get_full_name() == full_name }
+      @classes_and_modules.find  { |clazz| clazz.get_full_name() == full_name }
     end
 
     # Handle a const expression.
@@ -104,7 +104,7 @@ module Dependencytree
       else
         # found no existing module/class with the full_name
         model = ClassModel.new(type, @path, name)
-        @classes <<= model 
+        @classes_and_modules <<= model 
       end
       if ! @context_stack.empty?
         model.set_parent(@context_stack[-1])
