@@ -43,10 +43,10 @@ module Dependencytree
   end.parse!
 
   consumer = DependencyAggregator.new()
-  ARGV.each { |path|
+  ARGV.each do |path|
     puts "Path #{path}" if options[:verbose]
     handle_path(options, consumer, File.absolute_path(path))
-  }
+  end
   puts consumer.to_json
 
 end
