@@ -2,6 +2,8 @@ require "dependencytree/version"
 require "securerandom"
 
 module Dependencytree
+
+  # Model for classes and modules
   class ClassModel
 
     attr_reader :uuid
@@ -11,11 +13,17 @@ module Dependencytree
     # module_name: eventual module name or :anonymous
     # class_name: the class name
     def initialize(type, path, name)
+      # unique uuid for reference
       @uuid = SecureRandom.uuid
+      # :module or :class
       @type = type
+      # filesystem path of (first) definition
       @path = path
+      # local name (without enclosing modules)
       @name = name
+      # list of names of methods
       @method_names = []
+      # list of (unresolved) references as arrays
       @references = []
     end
 
