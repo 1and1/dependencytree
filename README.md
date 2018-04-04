@@ -24,7 +24,13 @@ Use the program in the shell and give it all ruby sources or folders containing 
 
         ruby -Ilib lib/dependencytree.rb lib
 
-The output will be a JSON of the references:
+The output will be a JSON of the references. The interesting parts are:
+* uuid: Every class/module has a unique UUID for referencing.
+* resolved_refs: Resolved / found references that are pointing to the UUID of the refered class.
+* unresolved_refs: Unresolved references that could not be found inside the sources provided. This can be Ruby classes or other classes from gems.
+
+The following is the example for the dependency tree tool itself:
+
 ```
 [
    {
