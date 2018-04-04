@@ -6,6 +6,7 @@ require 'parser/current'
 require 'optparse'
 require 'pp'
 require 'json'
+require 'logger'
 
 module Dependencytree
 
@@ -20,21 +21,31 @@ module Dependencytree
         handle_path(options, consumer, resolved) if File.file?(resolved) && options[:pattern].match(resolved)
       }
     elsif File.file?(path)
+      $LOG.debug("Handling path #{path}")
       tree = Parser::CurrentRuby.parse_file(path)
+      $LOG.debug("Parsed tree: #{tree}") if $LOG.debug?
       consumer.visit(path, tree)
     end
   end
+
+  $LOG = Logger.new('application.log', 'daily', 20)
 
   options = {}
   options[:ignore] = Regexp.new("^$")
   options[:pattern] = Regexp.new(".*\\.rb")
   OptionParser.new do |opt|
-    opt.on("-v", "--verbose", "Verbose output") { |o| options[:verbose] = true }
+    opt.on("-v", "--verbose", "Verbose output") do |o|
+      # TBD
+      options[:verbose] = true
+      $LOG.debug("verbose")
+    end
     opt.on("-p", "--pattern[=OPTIONAL]", "Pattern to accept source codes with (default: #{options[:pattern].to_s})") do |o|
       options[:pattern] = Regexp.new(o)
+      $LOG.debug("pattern = #{o}")
     end
     opt.on("-i", "--ignore[=OPTIONAL]", "Paths to not load (default: #{options[:ignore].to_s})") do |o|
       options[:ignore] = Regexp.new(o)
+      $LOG.debug("ignore = #{o}")
     end
     opt.on_tail("-h", "--help", "Show this message") do
       puts opt
@@ -44,7 +55,6 @@ module Dependencytree
 
   consumer = DependencyAggregator.new()
   ARGV.each do |path|
-    puts "Path #{path}" if options[:verbose]
     handle_path(options, consumer, File.absolute_path(path))
   end
   puts consumer.to_json

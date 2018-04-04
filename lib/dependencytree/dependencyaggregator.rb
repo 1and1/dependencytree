@@ -12,7 +12,6 @@ module Dependencytree
       # this is a flat list of all classes / modules seen
       @classes_and_modules = []
 
-      @debug = false
       # force adding the Kernel module to the list of classes
       _handle_class_module_common(:module, "Kernel", nil)
       @kernel = _resolve("Kernel")
@@ -54,15 +53,15 @@ module Dependencytree
     # Handle a const expression.
     # @param node the const node itself to handle.
     def _const(node)
-      puts "const" if @debug
-      pp node if @debug
+      $LOG.debug("const")
 
       raise ArgumentError, "type needs to be const (#{node.type})" if node.type != :const
       raise ArgumentError, "Children count needs to be 2 (#{node.children.length})" if node.children.length != 2
 
       reference = flatten_const_tree(node)
+
+      $LOG.debug("Reference to #{reference.to_s}")
       top_of_stack().add_reference(reference)
-      puts "added #{reference}" if @debug
     end
 
     # Handle a module expression.
@@ -71,7 +70,7 @@ module Dependencytree
       raise ArgumentError, "Children count for module is != 2 (#{node.children.length})" if node.children.length != 2
       raise ArgumentError, "First module child needs to be a const (#{node.children[0].type} #{node.children[0].type})" if node.children[0].type != :const
 
-      puts "module #{node.children[0].children[1]}" if @debug
+      $LOG.debug("module #{node.children[0].children[1]}")
 
       current_module_name = node.children[0].children[1]
       _handle_class_module_common(:module, current_module_name, node)
@@ -82,7 +81,7 @@ module Dependencytree
     def _class(node)    
       raise ArgumentError, "Children count for class is != 3 (#{node.children.length})" if node.children.length != 3
       raise ArgumentError, "First class child needs to be a const (#{node.children[0].type} #{node.children[0].type})" if node.children[0].type != :const
-      puts "clazz #{node.children[0].children[1]}" if @debug
+      $LOG.debug("class #{node.children[0].children[1]}")
 
       current_class_name = node.children[0].children[1]
       _handle_class_module_common(:class, current_class_name, node)
@@ -121,7 +120,7 @@ module Dependencytree
     def _def(node)
       raise ArgumentError, "Children count for def is != 3 (#{node.children.length})" if node.children.length != 3
 
-      puts "def #{node.children[0]}" if @debug
+      $LOG.debug("def #{node.children[0]}")
 
       # depending on whether in module or class be clever here ;)
       top_of_stack().add_method(node.children[0])
@@ -161,11 +160,12 @@ module Dependencytree
     # @param tree the AST tree node.
     def visit(path, tree)
       begin
-        pp tree if @debug
+        $LOG.debug("Visiting path #{path}")
         @path = path
         visit_node tree
         @path = nil
       rescue Exception => e
+        $LOG.error("Error in path #{path}")
         puts "Error in path #{path}"
         raise e
       end
