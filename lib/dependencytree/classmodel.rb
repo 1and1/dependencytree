@@ -9,6 +9,9 @@ module Dependencytree
     attr_reader :uuid
     attr_reader :name
     attr_reader :references
+    attr_reader :path
+    attr_reader :constant_names
+    attr_reader :method_names
 
     # type: :class or :module
     # path: the filesystem path the parsed class was found in
