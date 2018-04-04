@@ -48,6 +48,10 @@ module Dependencytree
       options[:ignore] = Regexp.new(o)
       $LOG.debug("ignore = #{o}")
     end
+    opt.on("-o", "--output[=OPTIONAL]", "Output path for the JSON file") do |o|
+      options[:output] = o
+      $LOG.debug("output = #{o}")
+    end
     opt.on_tail("-h", "--help", "Show this message") do
       puts opt
       exit
@@ -61,7 +65,12 @@ module Dependencytree
 
   classcontainer = ClassContainer.new(consumer.classes_and_modules)
 
-  puts consumer.to_json
-
+  if options[:output]
+    File.open(options[:output],"w") do |f|
+      f.write(consumer.to_json)
+    end
+  else
+    puts consumer.to_json
+  end
 end
 
