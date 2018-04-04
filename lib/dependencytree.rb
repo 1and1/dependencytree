@@ -1,5 +1,6 @@
 require "dependencytree/astprinter"
 require "dependencytree/dependencyaggregator"
+require "dependencytree/classcontainer"
 
 require "dependencytree/version"
 require 'parser/current'
@@ -57,6 +58,9 @@ module Dependencytree
   ARGV.each do |path|
     handle_path(options, consumer, File.absolute_path(path))
   end
+
+  classcontainer = ClassContainer.new(consumer.classes_and_modules)
+
   puts consumer.to_json
 
 end

@@ -7,6 +7,8 @@ module Dependencytree
   class ClassModel
 
     attr_reader :uuid
+    attr_reader :name
+    attr_reader :references
 
     # type: :class or :module
     # path: the filesystem path the parsed class was found in
@@ -23,17 +25,19 @@ module Dependencytree
       @name = name
       # list of names of methods
       @method_names = []
+      # list of names of constants
+      @constant_names = []
       # list of (unresolved) references as arrays
       @references = []
     end
 
     # Gets the full name of the class/module.
     # @return the full name, for example ModuleA::ModuleB::ClassA
-    def get_full_name()
+    def full_name()
       if @parent
-        result = @parent.get_full_name().to_s + "::" + @name.to_s
+        result = @parent.full_name().to_s + "::" + @name.to_s
       else
-        result = @name
+        result = @name.to_s
       end
       result
     end
@@ -49,8 +53,9 @@ module Dependencytree
         "type" => @type,
         "path" => @path,
         "name" => @name,
-        "full_name" => get_full_name(),
+        "full_name" => full_name(),
         "methods" => @method_names,
+        "constants" => @constant_names,
         "refs" => @references.uniq
       }
 
@@ -68,6 +73,12 @@ module Dependencytree
     # TBD method attributes
     def add_method(method_name)
       @method_names <<= method_name.to_sym
+    end
+
+    # Adds a method by its name to the list of methods.
+    # TBD method attributes
+    def add_constant(constant_name)
+      @constant_names <<= constant_name.to_sym
     end
 
     # Adds a method by its name to the list of methods.

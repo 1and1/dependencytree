@@ -4,6 +4,8 @@ require "dependencytree/classmodel"
 
 module Dependencytree
   class DependencyAggregator
+    attr_reader :classes_and_modules
+
     def initialize()
       # path will be the file system path of the source file
       @path = nil
@@ -47,7 +49,7 @@ module Dependencytree
     # Finds a class or module by its full name.
     # @param full_name the full name.
     def _resolve(full_name)
-      @classes_and_modules.find  { |clazz| clazz.get_full_name() == full_name }
+      @classes_and_modules.find  { |clazz| clazz.full_name() == full_name }
     end
 
     # Handle a const expression.
@@ -93,7 +95,7 @@ module Dependencytree
     # @param node the AST node of the class or module, can be nil if no children traversal required.
     def _handle_class_module_common(type, name, node)
       if @parent
-        resolved = _resolve(@parent.get_full_name()+"::"+name)
+        resolved = _resolve(@parent.full_name()+"::"+name)
       else
         resolved = _resolve(name)
       end
@@ -122,8 +124,19 @@ module Dependencytree
 
       $LOG.debug("def #{node.children[0]}")
 
-      # depending on whether in module or class be clever here ;)
       top_of_stack().add_method(node.children[0])
+
+      visit_children(node.children[1..node.children.length])
+    end
+
+    # Handle a def expression.
+    # @param node the def node itself to handle.
+    def _casgn(node)
+      raise ArgumentError, "Children count for casgn is != 3 (#{node.children.length})" if node.children.length != 3
+
+      $LOG.debug("casgn #{node.children[1]}")
+
+      top_of_stack().add_constant(node.children[1])
 
       visit_children(node.children[1..node.children.length])
     end
@@ -139,6 +152,8 @@ module Dependencytree
         _module(node)
       elsif node.type() == :def
         _def(node)
+      elsif node.type() == :casgn
+        _casgn(node)
       else
         visit_children(node.children)
       end
