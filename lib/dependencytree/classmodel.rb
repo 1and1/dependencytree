@@ -31,15 +31,21 @@ module Dependencytree
       @references = []
     end
 
-    # Gets the full name of the class/module.
-    # @return the full name, for example ModuleA::ModuleB::ClassA
-    def full_name()
+    # Gets the full name of the class/module as an array.
+    # @return the full name, for example ["ModuleA","ModuleB","ClassA"]
+    def full_name_array()
       if @parent
-        result = @parent.full_name().to_s + "::" + @name.to_s
+        result = @parent.full_name_array() << @name.to_s
       else
-        result = @name.to_s
+        result = [ @name.to_s ]
       end
       result
+    end
+
+    # Gets the full name of the class/module.
+    # @return the full name, for example "ModuleA::ModuleB::ClassA"
+    def full_name()
+      full_name_array.join("::")
     end
 
     def set_parent(parent)
