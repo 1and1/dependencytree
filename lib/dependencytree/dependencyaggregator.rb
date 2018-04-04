@@ -49,7 +49,7 @@ module Dependencytree
     # Finds a class or module by its full name.
     # @param full_name the full name.
     def _resolve(full_name)
-      @classes_and_modules.find  { |clazz| clazz.full_name() == full_name }
+      @classes_and_modules.find  { |clazz| clazz.full_name().to_s == full_name.to_s }
     end
 
     # Handle a const expression.
@@ -94,21 +94,29 @@ module Dependencytree
     # @param name the local class name.
     # @param node the AST node of the class or module, can be nil if no children traversal required.
     def _handle_class_module_common(type, name, node)
-      if @parent
-        resolved = _resolve(@parent.full_name()+"::"+name)
-      else
-        resolved = _resolve(name)
+      full_name = name
+      parent = nil
+      if ! @context_stack.empty?
+        parent = @context_stack[-1]
+        full_name = parent.full_name.to_s + "::" + name.to_s
       end
+      $LOG.debug("Full name is #{full_name}")
+      resolved = _resolve(full_name)
+
       if ! resolved.nil?
         # found an existing module/class with the full_name
         model = resolved
       else
         # found no existing module/class with the full_name
         model = ClassModel.new(type, @path, name)
+        if parent
+          model.set_parent(parent)
+        end
         @classes_and_modules <<= model 
       end
-      if ! @context_stack.empty?
-        model.set_parent(@context_stack[-1])
+
+      if resolved.nil?
+        $LOG.debug("Created new ClassModel for #{model.full_name}")
       end
 
       @context_stack <<= model
