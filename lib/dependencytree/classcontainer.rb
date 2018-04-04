@@ -3,7 +3,7 @@ require "securerandom"
 
 module Dependencytree
 
-  # Model for classes and modules
+  # Model for classes and modules.
   class ClassContainer
 
     # type: :class or :module
@@ -19,15 +19,25 @@ module Dependencytree
       resolve_references()
     end
 
+    # Goes thru all classes and tries to resolve the references.
     def resolve_references()
       @classes_and_modules.each do |clazz|
         $LOG.debug("Processing class #{clazz.full_name} located in #{clazz.path}")
         clazz.references.each do |reference_array|
-          resolve_reference(clazz, reference_array)
+          refered_class = resolve_reference(clazz, reference_array)
+          if refered_class
+            clazz.resolved_references <<= refered_class.uuid
+          else
+            clazz.unresolved_references <<= reference_array
+          end
         end
       end
     end
 
+    # Tries to resolve one reference either as a constant or a class/module reference.
+    # @param referer_class_model the ClassModel where the reference is in.
+    # @param reference_array the reference as in the source, can be absolute or relative to the referer class.  
+    # @return the ClassModel refering to (also for constants!).
     def resolve_reference(referer_class_model, reference_array)
       refered_class_model = resolve_reference_direct(referer_class_model, reference_array)
       if ! refered_class_model
@@ -43,7 +53,11 @@ module Dependencytree
       end
     end
 
-
+    # Resolve a constant module/class reference.
+    # @param referer_class_model the ClassModel where the reference is in.
+    # @param reference_array the reference as in the source, can be absolute or relative to the referer class. The last
+    # element of the array is the constant name.
+    # @return the refered class model or nil
     def resolve_reference_as_constant(referer_class_model, reference_array)
       reference_part = reference_array[0..-2]
       constant_name = reference_array[-1]
@@ -65,6 +79,10 @@ module Dependencytree
       end
     end
 
+    # Resolve a full module/class reference.
+    # @param referer_class_model the ClassModel where the reference is in.
+    # @param reference_array the reference as in the source, can be absolute or relative to the referer class.
+    # @return the refered class model or nil
     def resolve_reference_direct(referer_class_model, reference_array)
       $LOG.debug("Resolving reference array #{reference_array.to_s}")
 

@@ -13,6 +13,9 @@ module Dependencytree
     attr_reader :constant_names
     attr_reader :method_names
 
+    attr_accessor :resolved_references
+    attr_accessor :unresolved_references
+
     # type: :class or :module
     # path: the filesystem path the parsed class was found in
     # module_name: eventual module name or :anonymous
@@ -32,6 +35,9 @@ module Dependencytree
       @constant_names = []
       # list of (unresolved) references as arrays
       @references = []
+
+      @resolved_references = []
+      @unresolved_references = []
     end
 
     # Gets the full name of the class/module as an array.
@@ -65,7 +71,9 @@ module Dependencytree
         "full_name" => full_name(),
         "methods" => @method_names,
         "constants" => @constant_names,
-        "refs" => @references.uniq
+        "refs" => @references.uniq,
+        "resolved_refs" => @resolved_references.uniq,
+        "unresolved_refs" => @unresolved_references.uniq,
       }
 
       if @parent
