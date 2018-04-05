@@ -71,9 +71,9 @@ module Dependencytree
         "full_name" => full_name,
         "methods" => @method_names,
         "constants" => @constant_names,
-        "refs" => @references.uniq,
+        "refs" => @references.uniq.each_with_object([])  { |clazz, arr| arr<<clazz.join("::") },
         "resolved_refs" => @resolved_references.uniq,
-        "unresolved_refs" => @unresolved_references.uniq,
+        "unresolved_refs" => @unresolved_references.uniq.each_with_object([])  { |clazz, arr| arr<<clazz.join("::") }
       }
 
       if @parent

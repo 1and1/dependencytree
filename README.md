@@ -38,12 +38,12 @@ The output will be a JSON of the references. The interesting parts are:
 * **resolved_refs**: Resolved / found references that are pointing to the UUID of the refered class.
 * **unresolved_refs**: Unresolved references that could not be found inside the sources provided.
   This can be Ruby classes or other classes from gems that were not scanned.
-  The unresolved_refs entries are arrays of the name parts, for example `[ "moduleA", "mobuleB", "classC" ]`
+  The unresolved_refs entries are in ::-notation for example `"moduleA::mobuleB::classC"`
 * **methods**: List of seen method names.
 * **constants**: List of seen constant names.
 * **path**: Filesystem path of the first source file with a class/module definition.
 * **type**: `"module"` or `"class"`.
-* **refs**: An array of all references (resolvable and unresolvable) in array notation (see above).
+* **refs**: An array of all references (resolvable and unresolvable) in ::-notation (see above).
 * **name**: The local module/class name, for example `"Stat"`.
 * **full_name**: The full name of the module/class, for example `"File::Stat"`.
 
@@ -55,90 +55,55 @@ A similar output will be written for the example call given above.
 ```
 [
    {
-      "methods" : [],
-      "full_name" : "Kernel",
-      "unresolved_refs" : [],
-      "uuid" : "424ab3a4-60d3-4e7d-9374-8d1d72bd0d91",
-      "type" : "module",
-      "resolved_refs" : [],
-      "refs" : [],
-      "constants" : [],
       "path" : null,
-      "name" : "Kernel"
+      "resolved_refs" : [],
+      "full_name" : "Kernel",
+      "type" : "module",
+      "uuid" : "686bef0a-b4bc-4b19-bb70-eb0417b06779",
+      "methods" : [],
+      "name" : "Kernel",
+      "constants" : [],
+      "unresolved_refs" : [],
+      "refs" : []
    },
    {
-      "type" : "module",
-      "uuid" : "401771ee-5c37-4bdf-a10d-f9a467827791",
       "constants" : [
          "VERSION"
       ],
       "name" : "Dependencytree",
-      "path" : "/home/stephan/git/z/dependencytree/lib/dependencytree/classcontainer.rb",
-      "resolved_refs" : [
-         "aad66db1-8229-4565-8a9e-d1ea73d2281c",
-         "1212a5b6-75b8-4836-8867-14a8734bf3e2"
-      ],
       "refs" : [
-         [
-            "File"
-         ],
-         [
-            "Dir"
-         ],
-         [
-            "Parser",
-            "CurrentRuby"
-         ],
-         [
-            "Logger"
-         ],
-         [
-            "OptionParser"
-         ],
-         [
-            "DependencyAggregator"
-         ],
-         [
-            "ARGV"
-         ],
-         [
-            "ClassContainer"
-         ]
+         "File",
+         "STDERR",
+         "Dir",
+         "Parser::CurrentRuby",
+         "Logger",
+         "OptionParser",
+         "DependencyAggregator",
+         "ARGV",
+         "ClassContainer"
+      ],
+      "unresolved_refs" : [
+         "File",
+         "STDERR",
+         "Dir",
+         "Parser::CurrentRuby",
+         "Logger",
+         "OptionParser",
+         "ARGV"
       ],
       "full_name" : "Dependencytree",
+      "resolved_refs" : [
+         "38e0ac7a-9296-4b17-80cf-3e6aa99dd8ad",
+         "904001e8-6b0b-4829-a64b-6c4c1c8736c7"
+      ],
+      "path" : "/home/stephan/git/z/dependencytree/lib/dependencytree/classcontainer.rb",
       "methods" : [],
-      "unresolved_refs" : [
-         [
-            "File"
-         ],
-         [
-            "Dir"
-         ],
-         [
-            "Parser",
-            "CurrentRuby"
-         ],
-         [
-            "Logger"
-         ],
-         [
-            "OptionParser"
-         ],
-         [
-            "ARGV"
-         ]
-      ]
+      "uuid" : "8617cd01-c842-4f87-812c-16aa7c1e3945",
+      "type" : "module"
    },
    {
-      "parent_uuid" : "401771ee-5c37-4bdf-a10d-f9a467827791",
+      "uuid" : "904001e8-6b0b-4829-a64b-6c4c1c8736c7",
       "type" : "class",
-      "uuid" : "1212a5b6-75b8-4836-8867-14a8734bf3e2",
-      "constants" : [],
-      "name" : "ClassContainer",
-      "path" : "/home/stephan/git/z/dependencytree/lib/dependencytree/classcontainer.rb",
-      "refs" : [],
-      "resolved_refs" : [],
-      "full_name" : "Dependencytree::ClassContainer",
       "methods" : [
          "initialize",
          "resolve_references",
@@ -148,10 +113,32 @@ A similar output will be written for the example call given above.
          "resolve_by_full_name",
          "resolve_by_name"
       ],
-      "unresolved_refs" : []
+      "parent_uuid" : "8617cd01-c842-4f87-812c-16aa7c1e3945",
+      "path" : "/home/stephan/git/z/dependencytree/lib/dependencytree/classcontainer.rb",
+      "full_name" : "Dependencytree::ClassContainer",
+      "resolved_refs" : [],
+      "unresolved_refs" : [],
+      "refs" : [],
+      "name" : "ClassContainer",
+      "constants" : []
    },
    {
+      "name" : "ClassModel",
+      "constants" : [],
+      "unresolved_refs" : [
+         "SecureRandom",
+         "ArgumentError"
+      ],
+      "refs" : [
+         "SecureRandom",
+         "ArgumentError"
+      ],
+      "path" : "/home/stephan/git/z/dependencytree/lib/dependencytree/classmodel.rb",
+      "parent_uuid" : "8617cd01-c842-4f87-812c-16aa7c1e3945",
       "full_name" : "Dependencytree::ClassModel",
+      "resolved_refs" : [],
+      "uuid" : "b427a62b-46ee-4a01-8c03-2c595b8ac434",
+      "type" : "class",
       "methods" : [
          "initialize",
          "full_name_array",
@@ -162,40 +149,20 @@ A similar output will be written for the example call given above.
          "add_method",
          "add_constant",
          "add_reference"
-      ],
-      "unresolved_refs" : [
-         [
-            "SecureRandom"
-         ],
-         [
-            "ArgumentError"
-         ]
-      ],
-      "uuid" : "9a267b3e-0784-4114-810f-8d38484dbbc7",
-      "type" : "class",
-      "parent_uuid" : "401771ee-5c37-4bdf-a10d-f9a467827791",
-      "refs" : [
-         [
-            "SecureRandom"
-         ],
-         [
-            "ArgumentError"
-         ]
-      ],
-      "resolved_refs" : [],
-      "path" : "/home/stephan/git/z/dependencytree/lib/dependencytree/classmodel.rb",
-      "constants" : [],
-      "name" : "ClassModel"
+      ]
    },
    {
-      "unresolved_refs" : [
-         [
-            "ArgumentError"
-         ],
-         [
-            "Exception"
-         ]
+      "refs" : [
+         "ArgumentError",
+         "ClassModel",
+         "Exception"
       ],
+      "unresolved_refs" : [
+         "ArgumentError",
+         "Exception"
+      ],
+      "constants" : [],
+      "name" : "DependencyAggregator",
       "methods" : [
          "initialize",
          "top_of_stack",
@@ -211,27 +178,14 @@ A similar output will be written for the example call given above.
          "visit_children",
          "visit"
       ],
+      "uuid" : "38e0ac7a-9296-4b17-80cf-3e6aa99dd8ad",
+      "type" : "class",
+      "resolved_refs" : [
+         "b427a62b-46ee-4a01-8c03-2c595b8ac434"
+      ],
       "full_name" : "Dependencytree::DependencyAggregator",
       "path" : "/home/stephan/git/z/dependencytree/lib/dependencytree/dependencyaggregator.rb",
-      "constants" : [],
-      "name" : "DependencyAggregator",
-      "refs" : [
-         [
-            "ArgumentError"
-         ],
-         [
-            "ClassModel"
-         ],
-         [
-            "Exception"
-         ]
-      ],
-      "resolved_refs" : [
-         "9a267b3e-0784-4114-810f-8d38484dbbc7"
-      ],
-      "parent_uuid" : "401771ee-5c37-4bdf-a10d-f9a467827791",
-      "type" : "class",
-      "uuid" : "aad66db1-8229-4565-8a9e-d1ea73d2281c"
+      "parent_uuid" : "8617cd01-c842-4f87-812c-16aa7c1e3945"
    }
 ]
 ```
