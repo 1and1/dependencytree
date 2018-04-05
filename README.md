@@ -15,10 +15,26 @@ Install it yourself as from https://rubygems.org/ by calling:
 
 Use the program in the shell and give it all ruby sources or folders containing ruby sources.
 
+### Example
+
+An example call would look like this:
+
         dependencytree ./lib
 
+### Command line options
+
+The following is a list of possible command line options:
+
+        -v, --verbose                    Verbose output
+        -p, --pattern[=OPTIONAL]         Pattern to accept source codes with (default: (?-mix:.*\.rb))
+        -i, --ignore[=OPTIONAL]          Paths to not load (default: (?-mix:^$))
+        -o, --output[=OPTIONAL]          Output path for the JSON file
+        -h, --help                       Show this message
+
+### About the JSON output
+
 The output will be a JSON of the references. The interesting parts are:
-* **uuid**: Every class/module has a unique UUID for referencing. The UUID will stay unique only for one parsing run.
+* **uuid**: Every class/module has a unique generated UUID for referencing. The UUID will stay unique only for one parsing run to allow graph building.
 * **resolved_refs**: Resolved / found references that are pointing to the UUID of the refered class.
 * **unresolved_refs**: Unresolved references that could not be found inside the sources provided.
   This can be Ruby classes or other classes from gems that were not scanned.
@@ -31,7 +47,10 @@ The output will be a JSON of the references. The interesting parts are:
 * **name**: The local module/class name, for example `"Stat"`.
 * **full_name**: The full name of the module/class, for example `"File::Stat"`.
 
-The following is the example for the dependency tree tool itself:
+### Example JSON output
+
+The following is the example for the dependency tree tool itself.
+A similar output will be written for the example call given above.
 
 ```
 [
