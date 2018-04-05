@@ -15,12 +15,14 @@ module Dependencytree
       return
     end
     if File.directory?(path)
+      STDERR.puts path if options[:verbose]
       Dir.entries(path).each { |x|
         resolved = File.join(path, x)
         handle_path(options, consumer, resolved) if File.directory?(resolved) && x != "." && x != ".."
         handle_path(options, consumer, resolved) if File.file?(resolved) && options[:pattern].match(resolved)
       }
     elsif File.file?(path)
+      STDERR.puts path if options[:verbose]
       $LOG.debug("Handling path #{path}")
       tree = Parser::CurrentRuby.parse_file(path)
       $LOG.debug("Parsed tree: #{tree}") if $LOG.debug?
@@ -35,7 +37,6 @@ module Dependencytree
   options[:pattern] = /.*\.rb/
   OptionParser.new do |opt|
     opt.on("-v", "--verbose", "Verbose output") do |o|
-      # TBD
       options[:verbose] = true
       $LOG.debug("verbose")
     end
