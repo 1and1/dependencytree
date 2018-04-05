@@ -1,4 +1,3 @@
-require "dependencytree/astprinter"
 require "dependencytree/dependencyaggregator"
 require "dependencytree/classcontainer"
 
