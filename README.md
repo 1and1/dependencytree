@@ -25,9 +25,9 @@ Use the program in the shell and give it all ruby sources or folders containing 
         ruby -Ilib lib/dependencytree.rb lib
 
 The output will be a JSON of the references. The interesting parts are:
-* uuid: Every class/module has a unique UUID for referencing.
+* uuid: Every class/module has a unique UUID for referencing. The UUID will stay unique only for one parsing run.
 * resolved_refs: Resolved / found references that are pointing to the UUID of the refered class.
-* unresolved_refs: Unresolved references that could not be found inside the sources provided. This can be Ruby classes or other classes from gems.
+* unresolved_refs: Unresolved references that could not be found inside the sources provided. This can be Ruby classes or other classes from gems that were not scanned.
 
 The following is the example for the dependency tree tool itself:
 
@@ -229,7 +229,7 @@ To install this gem onto your local machine, run `bundle exec rake install`. To 
 
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/[USERNAME]/dependencytree.
+Bug reports and pull requests are welcome on GitHub at https://github.com/1and1/dependencytree.
 
 ## License
 
