@@ -20,7 +20,7 @@ module Dependencytree
     # Goes thru all classes and tries to resolve the references.
     def resolve_references
       @classes_and_modules.each do |clazz|
-        $LOG.debug("Processing class #{clazz.full_name} located in #{clazz.path}")
+        LOG.debug("Processing class #{clazz.full_name} located in #{clazz.path}")
         clazz.references.each do |reference_array|
           refered_class = resolve_reference(clazz, reference_array)
           if refered_class
@@ -43,9 +43,9 @@ module Dependencytree
       end
 
       if refered_class_model
-        $LOG.debug("Resolved #{reference_array.join('::')} to uuid #{refered_class_model.uuid}")
+        LOG.debug("Resolved #{reference_array.join('::')} to uuid #{refered_class_model.uuid}")
       else
-        $LOG.debug("Could not resolve #{reference_array.join('::')}")
+        LOG.debug("Could not resolve #{reference_array.join('::')}")
       end
       refered_class_model
     end
@@ -59,16 +59,16 @@ module Dependencytree
       reference_part = reference_array[0..-2]
       constant_name = reference_array[-1]
 
-      $LOG.debug("Resolving reference array #{reference_array.to_s} as reference #{reference_part.to_s} and constant #{constant_name}")
+      LOG.debug("Resolving reference array #{reference_array.to_s} as reference #{reference_part.to_s} and constant #{constant_name}")
 
       refered_class_model = resolve_reference_direct(referer_class_model, reference_part)
       if refered_class_model
-        $LOG.debug("Found reference to possible parent #{reference_part.to_s}")
+        LOG.debug("Found reference to possible parent #{reference_part.to_s}")
         if refered_class_model.constant_names.include? constant_name.to_sym
-          $LOG.debug("Found class #{refered_class_model.full_name} constant #{constant_name}")
+          LOG.debug("Found class #{refered_class_model.full_name} constant #{constant_name}")
           refered_class_model
         else
-          $LOG.debug("Found class #{refered_class_model.full_name}, but not constant #{constant_name}. Known constants: #{refered_class_model.constant_names}")
+          LOG.debug("Found class #{refered_class_model.full_name}, but not constant #{constant_name}. Known constants: #{refered_class_model.constant_names}")
           nil
         end
       else
@@ -81,15 +81,15 @@ module Dependencytree
     # @param reference_array the reference as in the source, can be absolute or relative to the referer class.
     # @return the refered class model or nil
     def resolve_reference_direct(referer_class_model, reference_array)
-      $LOG.debug("Resolving reference array #{reference_array.to_s}")
+      LOG.debug("Resolving reference array #{reference_array.to_s}")
 
       referer_array = referer_class_model.full_name_array
       i = 0
       refered_class_model = nil
       while !refered_class_model do
-        $LOG.debug("Referer array #{i} is #{referer_array.to_s}")
+        LOG.debug("Referer array #{i} is #{referer_array.to_s}")
         full_name = (referer_array+reference_array).join("::")
-        $LOG.debug("Full name #{i} is #{full_name} #{full_name.class.name}")
+        LOG.debug("Full name #{i} is #{full_name} #{full_name.class.name}")
         refered_class_model = resolve_by_full_name(full_name)
 
         break if referer_array.empty?
