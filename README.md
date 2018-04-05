@@ -7,11 +7,9 @@ The references can be used to build a dependency tree for your project.
 
 ## Installation
 
-Get the latest release gem from https://github.com/1and1/dependencytree/releases
+Install it yourself as from https://rubygems.org/ by calling:
 
-Install it yourself as:
-
-    $ gem install dependencytree-0.1.1.gem
+    $ gem install dependencytree
 
 ## Usage
 
