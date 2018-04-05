@@ -1,33 +1,37 @@
 # Dependencytree
 
 Parses ruby source codes and tries to build a dependency tree from the seen classes, modules and references.
+The output is a JSON file that contains all modules/classes along with their references.
+
+The references can be used to build a dependency tree for your project.
 
 ## Installation
 
-Add this line to your application's Gemfile:
+Get the latest release gem from https://github.com/1and1/dependencytree/releases
 
-```ruby
-gem 'dependencytree'
-```
+Install it yourself as:
 
-And then execute:
-
-    $ bundle
-
-Or install it yourself as:
-
-    $ gem install dependencytree
+    $ gem install dependencytree-0.1.1.gem
 
 ## Usage
 
 Use the program in the shell and give it all ruby sources or folders containing ruby sources.
 
-        ruby -Ilib lib/dependencytree.rb lib
+        dependencytree ./lib
 
 The output will be a JSON of the references. The interesting parts are:
-* uuid: Every class/module has a unique UUID for referencing. The UUID will stay unique only for one parsing run.
-* resolved_refs: Resolved / found references that are pointing to the UUID of the refered class.
-* unresolved_refs: Unresolved references that could not be found inside the sources provided. This can be Ruby classes or other classes from gems that were not scanned.
+* **uuid**: Every class/module has a unique UUID for referencing. The UUID will stay unique only for one parsing run.
+* **resolved_refs**: Resolved / found references that are pointing to the UUID of the refered class.
+* **unresolved_refs**: Unresolved references that could not be found inside the sources provided.
+  This can be Ruby classes or other classes from gems that were not scanned.
+  The unresolved_refs entries are arrays of the name parts, for example `[ "moduleA", "mobuleB", "classC" ]`
+* **methods**: List of seen method names.
+* **constants**: List of seen constant names.
+* **path**: Filesystem path of the first source file with a class/module definition.
+* **type**: `"module"` or `"class"`.
+* **refs**: An array of all references (resolvable and unresolvable) in array notation (see above).
+* **name**: The local module/class name, for example `"Stat"`.
+* **full_name**: The full name of the module/class, for example `"File::Stat"`.
 
 The following is the example for the dependency tree tool itself:
 
