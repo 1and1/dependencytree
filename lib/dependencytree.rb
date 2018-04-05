@@ -32,8 +32,8 @@ module Dependencytree
   $LOG = Logger.new('application.log', 'daily', 20)
 
   options = {}
-  options[:ignore] = Regexp.new("^$")
-  options[:pattern] = Regexp.new(".*\\.rb")
+  options[:ignore] = /^$/
+  options[:pattern] = /.*\.rb/
   OptionParser.new do |opt|
     opt.on("-v", "--verbose", "Verbose output") do |o|
       # TBD
@@ -41,11 +41,11 @@ module Dependencytree
       $LOG.debug("verbose")
     end
     opt.on("-p", "--pattern[=OPTIONAL]", "Pattern to accept source codes with (default: #{options[:pattern].to_s})") do |o|
-      options[:pattern] = Regexp.new(o)
+      options[:pattern] = /#{o}/
       $LOG.debug("pattern = #{o}")
     end
     opt.on("-i", "--ignore[=OPTIONAL]", "Paths to not load (default: #{options[:ignore].to_s})") do |o|
-      options[:ignore] = Regexp.new(o)
+      options[:ignore] = /#{o}/
       $LOG.debug("ignore = #{o}")
     end
     opt.on("-o", "--output[=OPTIONAL]", "Output path for the JSON file") do |o|
@@ -58,19 +58,19 @@ module Dependencytree
     end
   end.parse!
 
-  consumer = DependencyAggregator.new()
+  consumer = DependencyAggregator.new
   ARGV.each do |path|
     handle_path(options, consumer, File.absolute_path(path))
   end
 
   classcontainer = ClassContainer.new(consumer.classes_and_modules)
+  classcontainer.resolve_references
 
+  json = classcontainer.classes_and_modules.to_json
   if options[:output]
-    File.open(options[:output],"w") do |f|
-      f.write(consumer.to_json)
-    end
+    File.write(options[:output], json)
   else
-    puts consumer.to_json
+    puts json
   end
 end
 

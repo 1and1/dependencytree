@@ -13,8 +13,8 @@ module Dependencytree
     attr_reader :constant_names
     attr_reader :method_names
 
-    attr_accessor :resolved_references
-    attr_accessor :unresolved_references
+    attr_reader :resolved_references
+    attr_reader :unresolved_references
 
     # type: :class or :module
     # path: the filesystem path the parsed class was found in
@@ -42,9 +42,9 @@ module Dependencytree
 
     # Gets the full name of the class/module as an array.
     # @return the full name, for example ["ModuleA","ModuleB","ClassA"]
-    def full_name_array()
+    def full_name_array
       if @parent
-        result = @parent.full_name_array() << @name.to_s
+        result = @parent.full_name_array << @name.to_s
       else
         result = [ @name.to_s ]
       end
@@ -53,7 +53,7 @@ module Dependencytree
 
     # Gets the full name of the class/module.
     # @return the full name, for example "ModuleA::ModuleB::ClassA"
-    def full_name()
+    def full_name
       full_name_array.join("::")
     end
 
@@ -68,7 +68,7 @@ module Dependencytree
         "type" => @type,
         "path" => @path,
         "name" => @name,
-        "full_name" => full_name(),
+        "full_name" => full_name,
         "methods" => @method_names,
         "constants" => @constant_names,
         "refs" => @references.uniq,
@@ -87,21 +87,18 @@ module Dependencytree
     end
 
     # Adds a method by its name to the list of methods.
-    # TBD method attributes
     def add_method(method_name)
-      @method_names <<= method_name.to_sym
+      @method_names << method_name.to_sym
     end
 
-    # Adds a method by its name to the list of methods.
-    # TBD method attributes
+    # Adds a constant by its name to the list of constants.
     def add_constant(constant_name)
-      @constant_names <<= constant_name.to_sym
+      @constant_names << constant_name.to_sym
     end
 
-    # Adds a method by its name to the list of methods.
-    # TBD method attributes
+    # Adds a reference by its array-style full name.
     def add_reference(ref)
-      @references <<= ref
+      @references << ref
     end
   end
 end

@@ -6,7 +6,7 @@ module Dependencytree
   class DependencyAggregator
     attr_reader :classes_and_modules
 
-    def initialize()
+    def initialize
       # path will be the file system path of the source file
       @path = nil
       # context_stack is the stack of modules/classes loaded (namespacing)
@@ -28,11 +28,6 @@ module Dependencytree
       end
     end
 
-    # Convert the inner data to a json (TODO: should be put into a different structure)
-    def to_json
-      @classes_and_modules.to_json
-    end
-
     # Make an array of strings out of a encapsulated tree of :const expressions.
     # @param node the top const node to start flattening at.
     def flatten_const_tree(node)
@@ -49,7 +44,7 @@ module Dependencytree
     # Finds a class or module by its full name.
     # @param full_name the full name.
     def _resolve(full_name)
-      @classes_and_modules.find  { |clazz| clazz.full_name().to_s == full_name.to_s }
+      @classes_and_modules.find  { |clazz| clazz.full_name.to_s == full_name.to_s }
     end
 
     # Handle a const expression.
@@ -63,7 +58,7 @@ module Dependencytree
       reference = flatten_const_tree(node)
 
       $LOG.debug("Reference to #{reference.to_s}")
-      top_of_stack().add_reference(reference)
+      top_of_stack.add_reference(reference)
     end
 
     # Handle a module expression.
@@ -112,16 +107,16 @@ module Dependencytree
         if parent
           model.set_parent(parent)
         end
-        @classes_and_modules <<= model 
+        @classes_and_modules << model 
       end
 
       if resolved.nil?
         $LOG.debug("Created new ClassModel for #{model.full_name}")
       end
 
-      @context_stack <<= model
+      @context_stack << model
       # recurse over the contents of the module
-      visit_children(node.children[1..node.children.length]) if node
+      visit_children(node.children[1..-1]) if node
       @context_stack.pop
     end
 
@@ -132,9 +127,9 @@ module Dependencytree
 
       $LOG.debug("def #{node.children[0]}")
 
-      top_of_stack().add_method(node.children[0])
+      top_of_stack.add_method(node.children[0])
 
-      visit_children(node.children[1..node.children.length])
+      visit_children(node.children[1..-1])
     end
 
     # Handle a def expression.
@@ -144,26 +139,27 @@ module Dependencytree
 
       $LOG.debug("casgn #{node.children[1]}")
 
-      top_of_stack().add_constant(node.children[1])
+      top_of_stack.add_constant(node.children[1])
 
-      visit_children(node.children[1..node.children.length])
+      visit_children(node.children[1..-1])
     end
 
     # Visit a AST node and do the appropriate actions.
     # @param node the node to visit.
     def visit_node(node)
-      if node.type() == :const
-        _const(node)
-      elsif node.type() == :class
-        _class(node)
-      elsif node.type() == :module
-        _module(node)
-      elsif node.type() == :def
-        _def(node)
-      elsif node.type() == :casgn
-        _casgn(node)
-      else
-        visit_children(node.children)
+      case node.type
+        when :const
+          _const(node)
+        when :class
+          _class(node)
+        when :module
+          _module(node)
+        when :def
+          _def(node)
+        when :casgn
+          _casgn(node)
+        else
+          visit_children(node.children)
       end
     end
 
@@ -172,9 +168,7 @@ module Dependencytree
     def visit_children(children)
       return if ! children
       children.each do |child|
-        if child.respond_to?(:children)
-          visit_node(child)
-        end
+        visit_node(child) if child.respond_to?(:children)
       end
     end
 
@@ -185,7 +179,7 @@ module Dependencytree
       begin
         $LOG.debug("Visiting path #{path}")
         @path = path
-        visit_node tree
+        visit_node(tree)
         @path = nil
       rescue Exception => e
         $LOG.error("Error in path #{path}")
