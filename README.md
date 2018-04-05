@@ -26,6 +26,7 @@ An example call would look like this:
 The following is a list of possible command line options:
 
         -v, --verbose                    Verbose output
+        -d, --debug                      Log debugging output to file 'dependencytree.log'
         -p, --pattern[=OPTIONAL]         Pattern to accept source codes with (default: (?-mix:.*\.rb))
         -i, --ignore[=OPTIONAL]          Paths to not load (default: (?-mix:^$))
         -o, --output[=OPTIONAL]          Output path for the JSON file
