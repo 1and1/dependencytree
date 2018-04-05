@@ -38,20 +38,24 @@ The following is the example for the dependency tree tool itself:
 ```
 [
    {
-      "uuid" : "738bed4c-f320-47c4-999f-f8a931531ea9",
-      "unresolved_refs" : [],
-      "name" : "Kernel",
-      "constants" : [],
-      "resolved_refs" : [],
       "methods" : [],
+      "resolved_refs" : [],
+      "uuid" : "ace12917-bafd-4be5-b63b-c63be9f8acbf",
       "type" : "module",
-      "refs" : [],
+      "full_name" : "Kernel",
       "path" : null,
-      "full_name" : "Kernel"
+      "name" : "Kernel",
+      "unresolved_refs" : [],
+      "refs" : [],
+      "constants" : []
    },
    {
-      "full_name" : "Dependencytree",
-      "type" : "module",
+      "unresolved_refs" : [
+         [
+            "Parser",
+            "CurrentRuby"
+         ]
+      ],
       "refs" : [
          [
             "File"
@@ -67,9 +71,6 @@ The following is the example for the dependency tree tool itself:
             "Logger"
          ],
          [
-            "Regexp"
-         ],
-         [
             "OptionParser"
          ],
          [
@@ -82,32 +83,25 @@ The following is the example for the dependency tree tool itself:
             "ClassContainer"
          ]
       ],
-      "path" : "/home/stephan/git/z/dependencytree/lib/dependencytree/classcontainer.rb",
-      "resolved_refs" : [
-         "d8f6667b-cc22-4575-b39c-ff16ba53d5c6",
-         "4eaca801-dd61-476a-b58f-fb89bd6b9c00",
-         "2d8b1a14-720b-492b-8e32-c0212d2e369f"
-      ],
-      "methods" : [],
-      "uuid" : "d8f6667b-cc22-4575-b39c-ff16ba53d5c6",
-      "unresolved_refs" : [
-         [
-            "Parser",
-            "CurrentRuby"
-         ]
-      ],
       "constants" : [
          "VERSION"
       ],
-      "name" : "Dependencytree"
+      "path" : "/home/stephan/git/z/dependencytree/lib/dependencytree/classcontainer.rb",
+      "name" : "Dependencytree",
+      "resolved_refs" : [
+         "c185c2ea-b26c-4b2b-be39-42222bfb8cf3",
+         "2cf6eb45-274f-43b5-85ff-8a3c6713e6a0",
+         "d454f744-86c4-4ddb-ad5f-d0484a181b35"
+      ],
+      "methods" : [],
+      "uuid" : "c185c2ea-b26c-4b2b-be39-42222bfb8cf3",
+      "type" : "module",
+      "full_name" : "Dependencytree"
    },
    {
-      "unresolved_refs" : [],
-      "constants" : [],
-      "name" : "ClassContainer",
-      "uuid" : "2d8b1a14-720b-492b-8e32-c0212d2e369f",
-      "resolved_refs" : [],
-      "parent_uuid" : "d8f6667b-cc22-4575-b39c-ff16ba53d5c6",
+      "parent_uuid" : "c185c2ea-b26c-4b2b-be39-42222bfb8cf3",
+      "type" : "class",
+      "full_name" : "Dependencytree::ClassContainer",
       "methods" : [
          "initialize",
          "resolve_references",
@@ -117,50 +111,19 @@ The following is the example for the dependency tree tool itself:
          "resolve_by_full_name",
          "resolve_by_name"
       ],
-      "refs" : [],
-      "type" : "class",
+      "resolved_refs" : [],
+      "uuid" : "d454f744-86c4-4ddb-ad5f-d0484a181b35",
+      "name" : "ClassContainer",
       "path" : "/home/stephan/git/z/dependencytree/lib/dependencytree/classcontainer.rb",
-      "full_name" : "Dependencytree::ClassContainer"
-   },
-   {
-      "path" : "/home/stephan/git/z/dependencytree/lib/dependencytree/astprinter.rb",
-      "type" : "class",
-      "refs" : [],
-      "full_name" : "Dependencytree::ASTPrinter",
-      "uuid" : "273adc92-0f70-4ef4-934d-d622b88a2472",
-      "unresolved_refs" : [],
-      "name" : "ASTPrinter",
       "constants" : [],
-      "parent_uuid" : "d8f6667b-cc22-4575-b39c-ff16ba53d5c6",
-      "methods" : [
-         "initialize",
-         "visit"
-      ],
-      "resolved_refs" : []
+      "refs" : [],
+      "unresolved_refs" : []
    },
    {
       "path" : "/home/stephan/git/z/dependencytree/lib/dependencytree/classmodel.rb",
-      "type" : "class",
-      "refs" : [
-         [
-            "SecureRandom"
-         ],
-         [
-            "ArgumentError"
-         ]
-      ],
-      "full_name" : "Dependencytree::ClassModel",
-      "uuid" : "79977b8e-621e-40bf-a62f-63d68d72cf2e",
-      "unresolved_refs" : [
-         [
-            "SecureRandom"
-         ],
-         [
-            "ArgumentError"
-         ]
-      ],
-      "constants" : [],
       "name" : "ClassModel",
+      "resolved_refs" : [],
+      "uuid" : "2fab2d8d-44db-49f1-bfa0-7cd795e9488b",
       "methods" : [
          "initialize",
          "full_name_array",
@@ -172,31 +135,37 @@ The following is the example for the dependency tree tool itself:
          "add_constant",
          "add_reference"
       ],
-      "parent_uuid" : "d8f6667b-cc22-4575-b39c-ff16ba53d5c6",
-      "resolved_refs" : []
-   },
-   {
-      "full_name" : "Dependencytree::DependencyAggregator",
+      "parent_uuid" : "c185c2ea-b26c-4b2b-be39-42222bfb8cf3",
+      "full_name" : "Dependencytree::ClassModel",
+      "type" : "class",
       "refs" : [
          [
+            "SecureRandom"
+         ],
+         [
             "ArgumentError"
-         ],
-         [
-            "ClassModel"
-         ],
-         [
-            "Exception"
          ]
       ],
+      "unresolved_refs" : [
+         [
+            "SecureRandom"
+         ],
+         [
+            "ArgumentError"
+         ]
+      ],
+      "constants" : []
+   },
+   {
       "type" : "class",
-      "path" : "/home/stephan/git/z/dependencytree/lib/dependencytree/dependencyaggregator.rb",
+      "parent_uuid" : "c185c2ea-b26c-4b2b-be39-42222bfb8cf3",
+      "full_name" : "Dependencytree::DependencyAggregator",
       "resolved_refs" : [
-         "79977b8e-621e-40bf-a62f-63d68d72cf2e"
+         "2fab2d8d-44db-49f1-bfa0-7cd795e9488b"
       ],
       "methods" : [
          "initialize",
          "top_of_stack",
-         "to_json",
          "flatten_const_tree",
          "_resolve",
          "_const",
@@ -209,7 +178,21 @@ The following is the example for the dependency tree tool itself:
          "visit_children",
          "visit"
       ],
-      "parent_uuid" : "d8f6667b-cc22-4575-b39c-ff16ba53d5c6",
+      "uuid" : "2cf6eb45-274f-43b5-85ff-8a3c6713e6a0",
+      "name" : "DependencyAggregator",
+      "path" : "/home/stephan/git/z/dependencytree/lib/dependencytree/dependencyaggregator.rb",
+      "constants" : [],
+      "refs" : [
+         [
+            "ArgumentError"
+         ],
+         [
+            "ClassModel"
+         ],
+         [
+            "Exception"
+         ]
+      ],
       "unresolved_refs" : [
          [
             "ArgumentError"
@@ -217,10 +200,7 @@ The following is the example for the dependency tree tool itself:
          [
             "Exception"
          ]
-      ],
-      "constants" : [],
-      "name" : "DependencyAggregator",
-      "uuid" : "4eaca801-dd61-476a-b58f-fb89bd6b9c00"
+      ]
    }
 ]
 ```
