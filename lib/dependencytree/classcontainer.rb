@@ -64,7 +64,7 @@ module Dependencytree
       refered_class_model = resolve_reference_direct(referer_class_model, reference_part)
       if refered_class_model
         $LOG.debug("Found reference to possible parent #{reference_part.to_s}")
-        if refered_class_model.constant_names.find { |x| constant_name.to_s == constant_name.to_s }
+        if refered_class_model.constant_names.include? constant_name.to_sym
           $LOG.debug("Found class #{refered_class_model.full_name} constant #{constant_name}")
           refered_class_model
         else
