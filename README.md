@@ -7,7 +7,7 @@ The references can be used to build a dependency tree for your project.
 
 ## Installation
 
-Install it yourself as from https://rubygems.org/ by calling:
+Install it yourself from https://rubygems.org/ by calling:
 
     $ gem install dependencytree
 
