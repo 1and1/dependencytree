@@ -3,7 +3,9 @@ require 'parser/current'
 require "dependencytree/classmodel"
 
 module Dependencytree
-  class DependencyAggregator
+  # Interprets AST trees from the Ruby parser and maintains a list of seen
+  # classes, modules, constants and methods.
+  class TreeInterpreter
     attr_reader :classes_and_modules
 
     def initialize

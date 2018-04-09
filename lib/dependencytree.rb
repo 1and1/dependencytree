@@ -1,5 +1,5 @@
-require "dependencytree/dependencyaggregator"
-require "dependencytree/classcontainer"
+require "dependencytree/treeinterpreter"
+require "dependencytree/dependencyresolver"
 
 require "dependencytree/version"
 require 'parser/current'
@@ -64,15 +64,15 @@ module Dependencytree
   end
   LOG = log
 
-  consumer = DependencyAggregator.new
+  treeinterpreter = TreeInterpreter.new
   ARGV.each do |path|
-    handle_path(options, consumer, File.absolute_path(path))
+    handle_path(options, treeinterpreter, File.absolute_path(path))
   end
 
-  classcontainer = ClassContainer.new(consumer.classes_and_modules)
-  classcontainer.resolve_references
+  dependencyresolver = DependencyResolver.new(treeinterpreter.classes_and_modules)
+  dependencyresolver.resolve_references
 
-  json = classcontainer.classes_and_modules.to_json
+  json = dependencyresolver.classes_and_modules.to_json
   if options[:output]
     File.write(options[:output], json)
   else

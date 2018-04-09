@@ -3,8 +3,8 @@ require "securerandom"
 
 module Dependencytree
 
-  # Model for classes and modules.
-  class ClassContainer
+  # Resolves symbols within the passed-in class/module array.
+  class DependencyResolver
 
     attr_reader :classes_and_modules
 
