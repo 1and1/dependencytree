@@ -83,7 +83,7 @@ module Dependencytree
     # @param reference_array the reference as in the source, can be absolute or relative to the referer class.
     # @return the refered class model or nil
     def resolve_reference_direct(referer_class_model, reference_array)
-      LOG.debug("Resolving reference array #{reference_array.to_s}")
+      @@log.debug("Resolving reference array #{reference_array.to_s}")
 
       referer_array = referer_class_model.full_name_array
       i = 0

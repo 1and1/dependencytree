@@ -55,14 +55,14 @@ module Dependencytree
     # Handle a const expression.
     # @param node the const node itself to handle.
     def _const(node)
-      LOG.debug("const")
+      @@log.debug("const")
 
       raise ArgumentError, "type needs to be const (#{node.type})" if node.type != :const
       raise ArgumentError, "Children count needs to be 2 (#{node.children.length})" if node.children.length != 2
 
       reference = flatten_const_tree(node)
 
-      LOG.debug("Reference to #{reference.to_s}")
+      @@log.debug("Reference to #{reference.to_s}")
       top_of_stack.add_reference(reference)
     end
 
