@@ -46,11 +46,11 @@ class OneModuleResolvingReferrerTest < Minitest::Test
 
     one_module_res_ref_expect =   {
       "uuid" => "2",
-      "parent_uuid" => 1,
+      "parent_uuid" => "1",
       "type" => "module",
       "path" => File.absolute_path(one_module_ref_ref).to_s,
       "name" => "OneModuleResolvingReferrer",
-      "full_name" => "OneModuleResolvingReferrer",
+      "full_name" => "OneModule::OneModuleResolvingReferrer",
       "methods" => ["method"],
       "constants" => [],
       "refs" => ["CONST"],

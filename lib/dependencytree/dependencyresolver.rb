@@ -78,9 +78,8 @@ module Dependencytree
         @@log.debug("Trying to resolve relative")
         current = referer_class_model
         while !refered_class_model && current
-          full_name = current.full_name
-          if full_name.end_with?(reference_part.join("::"))
-            # TBD this doesn't fix wrong sub matches
+          full_name_array = current.full_name_array
+          if full_name_array.last(reference_part.length) == reference_part
             refered_class_model = current
             break
           end
