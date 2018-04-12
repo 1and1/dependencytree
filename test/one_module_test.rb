@@ -1,4 +1,7 @@
 require "dependencytree/treemain"
+require "dependencytree/classmodel"
+
+require "int_generator"
 
 require 'minitest/autorun'
 require "tempfile"
@@ -6,6 +9,10 @@ require "json"
 
 # Test for parsing "one_module.rb" and comparing the output json.
 class TestOneModule < Minitest::Test
+
+  def setup
+    Dependencytree::ClassModel.generator = IntGenerator.new
+  end
 
   def test_one_module
     output = Tempfile.new("json")
@@ -20,7 +27,7 @@ class TestOneModule < Minitest::Test
     
     assert(json.length == 2)
     kernel_expect =   {
-      "uuid" => json[0]["uuid"],
+      "uuid" => "0",
       "type" => "module",
       "path" => nil,
       "name" => "Kernel",
@@ -34,7 +41,7 @@ class TestOneModule < Minitest::Test
     assert_equal(kernel_expect, json[0])
 
     one_module_expect =   {
-      "uuid" => json[1]["uuid"],
+      "uuid" => "1",
       "type" => "module",
       "path" => File.absolute_path(one_module).to_s,
       "name" => "OneModule",
@@ -42,7 +49,7 @@ class TestOneModule < Minitest::Test
       "methods" => ["method"],
       "constants" => ["CONST"],
       "refs" => ["CONST"],
-      "resolved_refs" => [json[1]["uuid"]],
+      "resolved_refs" => ["1"],
       "unresolved_refs"=> []
     }
     assert_equal(one_module_expect, json[1])

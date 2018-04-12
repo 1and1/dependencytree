@@ -16,13 +16,15 @@ module Dependencytree
     attr_reader :resolved_references
     attr_reader :unresolved_references
 
+    @@generator = SecureRandom
+
     # type: :class or :module
     # path: the filesystem path the parsed class was found in
     # module_name: eventual module name or :anonymous
     # class_name: the class name
     def initialize(type, path, name)
       # unique uuid for reference
-      @uuid = SecureRandom.uuid
+      @uuid = @@generator.uuid
       # :module or :class
       @type = type
       # filesystem path of (first) definition
@@ -41,6 +43,10 @@ module Dependencytree
 
       @resolved_references = []
       @unresolved_references = []
+    end
+
+    def self.generator=(generator)
+      @@generator = generator
     end
 
     # Gets the full name of the class/module as an array.
