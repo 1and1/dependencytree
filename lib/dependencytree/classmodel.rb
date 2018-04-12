@@ -36,6 +36,9 @@ module Dependencytree
       # list of (unresolved) references as arrays
       @references = []
 
+      # no parent by default (will be set later)
+      @parent = nil
+
       @resolved_references = []
       @unresolved_references = []
     end
