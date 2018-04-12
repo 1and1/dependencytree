@@ -15,7 +15,10 @@ class TestCommon < Minitest::Test
   def self.call(classes)
     Dependencytree::ClassModel.generator = IntGenerator.new
     output = Tempfile.new("json")
-    ARGV[0..-1] = ["-o#{output.path}"] + classes
+    # * output to file
+    # * debug
+    # * the class files passed as parameter
+    ARGV[0..-1] = ["-o#{output.path}", "-d"] + classes
     Dependencytree::TreeMain.main
 
     json_string = output.read
