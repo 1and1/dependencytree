@@ -54,7 +54,7 @@ module Dependencytree
         end
         opt.on_tail("-h", "--help", "Show this message") do
           puts opt
-          exit
+          return
         end
       end.parse!
 
