@@ -1,4 +1,4 @@
-# Dependencytree
+# Dependencytree ![Travis CI Status](https://travis-ci.org/1and1/dependencytree.svg?branch=master)
 
 Parses ruby source codes and tries to build a dependency tree from the seen classes, modules and references.
 The output is a JSON file that contains all modules/classes along with their references.
