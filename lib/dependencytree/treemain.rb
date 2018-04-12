@@ -60,7 +60,7 @@ module Dependencytree
 
       if options[:debug]
         log = Logger.new('dependencytree.log')
-        log.level = Logger::WARN
+        log.level = Logger::DEBUG
       else
         log = Logger.new(STDOUT)
         log.level = Logger::WARN
