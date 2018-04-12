@@ -12,6 +12,7 @@ module Dependencytree
     attr_reader :path
     attr_reader :constant_names
     attr_reader :method_names
+    attr_reader :parent
 
     attr_reader :resolved_references
     attr_reader :unresolved_references

@@ -63,7 +63,46 @@ module Dependencytree
 
       @@log.debug("Resolving reference array #{reference_array.to_s} as reference #{reference_part.to_s} and constant #{constant_name}")
 
-      refered_class_model = resolve_reference_direct(referer_class_model, reference_part)
+      refered_class_model = nil
+
+      # qualified (Foo::CONST) or unqualified (CONST) reference?
+
+      # try to resolve absolute (Outer::Inner1::Inner2::CONST)
+      if reference_part.length > 0
+        @@log.debug("Trying to resolve absolute")
+        refered_class_model = resolve_reference_direct(referer_class_model, reference_part)
+      end
+
+      # try to resolve relative (Inner1::Inner2::CONST)
+      if !refered_class_model && reference_part.length > 0
+        @@log.debug("Trying to resolve relative")
+        current = referer_class_model
+        while !refered_class_model && current
+          full_name = current.full_name
+          if full_name.end_with?(reference_part.join("::"))
+            # TBD this doesn't fix wrong sub matches
+            refered_class_model = current
+            break
+          end
+          current = current.parent
+        end
+      end
+
+      # try to resolve unqualified (CONST)
+      if !refered_class_model && reference_part.length == 0
+        @@log.debug("Trying to resolve unqualified")
+        current_class = referer_class_model
+        i = 0
+        while (current_class) && (!refered_class_model) do
+          @@log.debug("Current class #{i} is #{current_class.full_name}")
+
+          refered_class_model = current_class if current_class.constant_names.include?(constant_name)
+
+          current_class = current_class.parent
+          i += 1
+        end
+      end
+
       if refered_class_model
         @@log.debug("Found reference to possible parent #{reference_part.to_s}")
         if refered_class_model.constant_names.include? constant_name.to_sym
@@ -74,6 +113,7 @@ module Dependencytree
           nil
         end
       else
+        @@log.warn("No refered class model for #{reference_part.to_s}")
         nil
       end
     end
