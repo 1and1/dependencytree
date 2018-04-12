@@ -9,7 +9,7 @@ require "tempfile"
 require "json"
 
 # Test for parsing "one_module.rb" and comparing the output json.
-class TestOneModule < Minitest::Test
+class OneModuleTest < Minitest::Test
 
   def test_one_module
     one_module = "test/example/one_module.rb"
