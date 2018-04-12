@@ -1,6 +1,3 @@
-require "dependencytree/treemain"
-require "dependencytree/classmodel"
-
 require "test_common"
 require "int_generator"
 
