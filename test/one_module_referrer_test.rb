@@ -8,7 +8,7 @@ require 'minitest/autorun'
 require "tempfile"
 require "json"
 
-# Test for parsing "one_module.rb" and comparing the output json.
+# Test for parsing "one_module.rb" and "one_module_referrer.rb" and comparing the output json.
 class OneModuleReferrerTest < Minitest::Test
 
   def test_one_module_referrer
@@ -53,7 +53,7 @@ class OneModuleReferrerTest < Minitest::Test
       "methods" => ["method"],
       "constants" => [],
       "refs" => ["OneModule::CONST"],
-      "resolved_refs" => ["1"],
+      "resolved_refs" => ["1"], # the cross-module-reference OneModule::CONST
       "unresolved_refs"=> []
     }
     assert_equal(one_module_ref_expect, json[2])
