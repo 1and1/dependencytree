@@ -27,7 +27,7 @@ module Dependencytree
         STDERR.puts path if options[:verbose]
         @@log.debug("Handling path #{path}")
         tree = Parser::CurrentRuby.parse_file(path)
-        @@log.debug("Parsed tree: #{tree}") if LOG.debug?
+        @@log.debug("Parsed tree: #{tree}") if @@log.debug?
         consumer.visit(path, tree)
       end
     end
